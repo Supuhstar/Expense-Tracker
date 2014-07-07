@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Expense Tracker</string>
+    <string name="tableLayoutStretchColumns">1,2,3</string>
+    <string name="tenPercent">10%</string>
+    <string name="fifteenPercent">15%</string>
+    <string name="twentyPercent">20%</string>
+    <string name="billTotalLabel">Bill total: </string>
+    <string name="billTotalHint">The total amount charged, plus tax</string>
+    <string name="tipTextLabel">Tip: </string>
+    <string name="totalTextLabel">Total: </string>
+    <string name="customTextLabel">Custom: </string>
+    <string name="customTipReadoutPlaceholder">%</string>
+    <string name="action_settings">Hi! I\'m not used yet.</string>
+    <string name="zeroCurrency">$0.00</string>
+    <string name="currencySymbol">$</string>
+
+</resources>
