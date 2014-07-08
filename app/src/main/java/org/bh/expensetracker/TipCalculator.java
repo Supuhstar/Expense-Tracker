@@ -1,21 +1,16 @@
-/* Ben Leggiero's mod of the Deitel Tip Calculator into an Expense Tracker */
-package org.bh.tipcalculator2;
+/* Ben Leggiero's verion of the Deitel Tip Calculator */
+package org.bh.expensetracker;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.NotificationManager;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,35 +26,14 @@ public class TipCalculator extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tip_calculator);
+        Toast.makeText(this, "Loading Tip Calculator Activity...", Toast.LENGTH_LONG).show();
+        setContentView(R.layout.activity_main);
         /*if (savedInstanceState == null)
         {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }*/
-    }
-
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tip_calculator, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -87,6 +61,7 @@ public class TipCalculator extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
+            Toast.makeText(getActivity(), "Loading Tip Calculator...", Toast.LENGTH_LONG).show();
             if (savedInstanceState == null)
             {
                 currentBillTotal = 0;

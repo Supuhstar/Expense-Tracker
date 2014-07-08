@@ -1,4 +1,4 @@
-package org.bh.tipcalculator2;
+package org.bh.expensetracker;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

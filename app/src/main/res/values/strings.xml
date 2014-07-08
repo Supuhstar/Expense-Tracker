@@ -6,14 +6,32 @@
     <string name="tenPercent">10%</string>
     <string name="fifteenPercent">15%</string>
     <string name="twentyPercent">20%</string>
-    <string name="billTotalLabel">Bill total: </string>
+    <string name="billTotalLabel">Bill total:\ </string>
     <string name="billTotalHint">The total amount charged, plus tax</string>
-    <string name="tipTextLabel">Tip: </string>
-    <string name="totalTextLabel">Total: </string>
-    <string name="customTextLabel">Custom: </string>
+    <string name="tipTextLabel">Tip:\ </string>
+    <string name="totalTextLabel">Total:\ </string>
+    <string name="customTextLabel">Custom:\ </string>
     <string name="customTipReadoutPlaceholder">%</string>
-    <string name="action_settings">Hi! I\'m not used yet.</string>
+    <string name="action_settings">[no settings yet]</string>
     <string name="zeroCurrency">$0.00</string>
     <string name="currencySymbol">$</string>
-
+    <string name="salaryLabel">Salary:\ </string>
+    <string name="salaryPrompt">Salary type</string>
+    <string name="budgetingTabText">Budgeting</string>
+    <string name="tippingTabText">Tipping</string>
+    <string name="salaryDebtPayoffLabel">Debt Payoff:\ </string>
+    <string name="billsExpensesLabel">Bills:\ </string>
+    <string name="foodExpensesLabel">Food:\ </string>
+    <string name="housingExpensesLabel">Housing:\ </string>
+    <string name="transitExpensesLabel">Transit:\ </string>
+    <string name="otherExpensesLabel">Other:\ </string>
+    <string name="savingsPerCycleExpensesLabel">Savings per Salary:\ </string>
+    <string name="timeToPayExpensesLabel">Payoff time:\ </string>
+    <string name="savingsOverallExpensesLabel">Final Savings:\ </string>
+    <string-array name="salary_array">
+        <item>Hourly</item>
+        <item default="default">Monthly</item>
+        <item>Quarterly</item>
+        <item>Yearly</item>
+    </string-array>
 </resources>
