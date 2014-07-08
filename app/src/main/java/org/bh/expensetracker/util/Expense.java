@@ -7,7 +7,7 @@ package org.bh.expensetracker.util;
  * @version 1.1.0
  * @since 2014-07-08
  */
-public enum Expenses {
+public enum Expense {
     BILLS(),
     FOOD(),
     RENT(),
@@ -16,7 +16,7 @@ public enum Expenses {
 
     private float expenseAmount;
 
-    private Expenses() {
+    private Expense() {
         expenseAmount = 0;
     }
 
@@ -30,7 +30,7 @@ public enum Expenses {
 
     public static float calculateTotal() {
         float total = 0;
-        for (Expenses expense : values())
+        for (Expense expense : values())
             total += expense.getExpenseAmount();
         return total;
     }

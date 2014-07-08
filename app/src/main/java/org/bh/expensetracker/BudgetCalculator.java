@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.bh.expensetracker.util.Expense;
 import org.bh.expensetracker.util.SalaryType;
 
 import java.text.DecimalFormat;
@@ -102,69 +104,6 @@ import java.text.DecimalFormat;
                     }
                 });
                 salarySpinner.setSelection(salaryTypeIndex);
-
-
-                /*final SpinnerAdapter originalAdapter = salarySpinner.getAdapter();
-                salarySpinner.setAdapter(new SpinnerAdapter() {
-                    @Override
-                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null)
-                            convertView = new TextView(getActivity());
-                        SalaryType[] salaryTypes = SalaryType.values();
-                        if (position > salaryTypes.length)
-                            return null;
-                        if (convertView instanceof TextView)
-                            ((TextView)convertView).setText(salaryTypes[position].toString());
-                        return convertView;
-                    }
-
-                    @Override
-                    public void registerDataSetObserver(DataSetObserver observer)
-                    {if(originalAdapter!=null)originalAdapter.registerDataSetObserver(observer);}
-
-                    @Override
-                    public void unregisterDataSetObserver(DataSetObserver observer)
-                    {if(originalAdapter!=null)originalAdapter.unregisterDataSetObserver(observer);}
-
-                    @Override
-                    public int getCount() {
-                        return SalaryType.values().length;
-                    }
-
-                    @Override
-                    public Object getItem(int position) {
-                        return SalaryType.values()[position];
-                    }
-
-                    @Override
-                    public long getItemId(int position) {
-                        return SalaryType.values()[position].ordinal();
-                    }
-
-                    @Override
-                    public boolean hasStableIds() {
-                        return true;
-                    }
-
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent)
-                    {return originalAdapter!=null?originalAdapter.getView(position, convertView,
-                        parent):null;}
-
-                    @Override
-                    public int getItemViewType(int position)
-                    {return originalAdapter!=null?originalAdapter.getItemViewType(position):
-                        IGNORE_ITEM_VIEW_TYPE;}
-
-                    @Override
-                    public int getViewTypeCount()
-                    {return originalAdapter!=null?originalAdapter.getViewTypeCount():1;}
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-                });*/
             }
             debtPayoffPercentTextView = (TextView) rootView.findViewById(
                     R.id.salaryDebtPayoffPercentTextView);
