@@ -28,7 +28,7 @@ public enum Expenses {
         expenseAmount = newExpenseAmount;
     }
 
-    public float calculateTotal() {
+    public static float calculateTotal() {
         float total = 0;
         for (Expenses expense : values())
             total += expense.getExpenseAmount();
