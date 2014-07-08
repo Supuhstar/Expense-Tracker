@@ -4,7 +4,7 @@ package org.bh.expensetracker.util;
  * Represents the 5 classes of expense
  *
  * @author Ben Leggiero of Blue Husky Programming and Ian Jensen
- * @version 1.0.0
+ * @version 1.1.0
  * @since 2014-07-08
  */
 public enum Expenses {
