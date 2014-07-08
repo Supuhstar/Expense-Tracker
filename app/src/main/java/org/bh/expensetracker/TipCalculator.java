@@ -61,7 +61,10 @@ public class TipCalculator extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            Toast.makeText(getActivity(), "Loading Tip Calculator...", Toast.LENGTH_LONG).show();
+            Toast loadingNotification =
+                Toast.makeText(getActivity(), "Loading Tip Calculator...", Toast.LENGTH_LONG);
+            loadingNotification.show();
+
             if (savedInstanceState == null)
             {
                 currentBillTotal = 0;
@@ -90,6 +93,8 @@ public class TipCalculator extends Activity {
 
             SeekBar customSeekBar = (SeekBar) rootView.findViewById(R.id.customSeekBar);
             customSeekBar.setOnSeekBarChangeListener(customSeekBarListener);
+
+            loadingNotification.cancel();
             return rootView;
         }
 

@@ -20,11 +20,13 @@
     <string name="budgetingTabText">Budgeting</string>
     <string name="tippingTabText">Tipping</string>
     <string name="salaryDebtPayoffLabel">Debt Payoff:\ </string>
+    <string name="expensesLabel">Expenses</string>
     <string name="billsExpensesLabel">Bills:\ </string>
     <string name="foodExpensesLabel">Food:\ </string>
     <string name="housingExpensesLabel">Housing:\ </string>
     <string name="transitExpensesLabel">Transit:\ </string>
     <string name="otherExpensesLabel">Other:\ </string>
+    <string name="resultsLabel">Results</string>
     <string name="savingsPerCycleExpensesLabel">Savings per Salary:\ </string>
     <string name="timeToPayExpensesLabel">Payoff time:\ </string>
     <string name="savingsOverallExpensesLabel">Final Savings:\ </string>

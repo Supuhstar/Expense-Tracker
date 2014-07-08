@@ -3,6 +3,7 @@ package org.bh.expensetracker;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,18 +15,39 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  */
  public class Convenience {
-    public static void bindPercentageInOut(SeekBar input, final TextView output)
+
+    /**
+     * Binds the given input and output, so that whenever the input changes, its value is displayed
+     * in the output with a percent sign next to it.
+     *
+     * @param input the input to draw from
+     * @param output the output to write to
+     * @param nestedListener a nested listener, in case you want more functionality
+     */
+    public static void bindSeekBarInOut(
+            SeekBar input,
+            final TextView output,
+            final DecimalFormat outputFormat,
+            final SeekBar.OnSeekBarChangeListener nestedListener)
     {
         input.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener()
                 {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        output.setText(seekBar.getProgress() + "%");
+                        output.setText(outputFormat.format(seekBar.getProgress()));
+                        if (nestedListener != null)
+                            nestedListener.onProgressChanged(seekBar, progress, fromUser);
                     }
 
-                    @Override public void onStartTrackingTouch(SeekBar seekBar){}
-                    @Override public void onStopTrackingTouch(SeekBar seekBar){}
+                    @Override public void onStartTrackingTouch(SeekBar seekBar) {
+                        if (nestedListener != null)
+                            nestedListener.onStartTrackingTouch(seekBar);
+                    }
+                    @Override public void onStopTrackingTouch(SeekBar seekBar) {
+                        if (nestedListener != null)
+                            nestedListener.onStopTrackingTouch(seekBar);
+                    }
                 }
             )
         ;
