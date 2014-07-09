@@ -72,4 +72,9 @@ public enum SalaryType
         String name = name().replace("_", " ");
         return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
     }
+
+    public String toNoun() {
+        String s = toString();
+        return s.substring(0, s.length() - 2);
+    }
 }

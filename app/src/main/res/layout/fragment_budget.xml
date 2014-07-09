@@ -334,7 +334,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/savingsPerCycleExpensesLabel"
-                            android:id="@+id/savingsPerCycleLabelTextView"
+                            android:id="@+id/savingsPerCycleLabel"
                             android:layout_column="0"
                             android:layout_gravity="center_vertical|right"
                             android:gravity="center_vertical|right" />

@@ -21,6 +21,8 @@ import org.bh.expensetracker.util.SalaryType;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static org.bh.expensetracker.Convenience.extractDouble;
+
 /**
  * Made for ExpenseTracker by and copyrighted to Blue Husky Programming, ©2014 GPLv3.<hr/>
  *
@@ -56,7 +58,6 @@ import java.util.ArrayList;
 
         protected SalaryType currentSalary;
         protected ArrayList<ExpenseIO> expenseIOs = new ArrayList<ExpenseIO>();
-        protected DebtCalculator debtCalculator = new DebtCalculator();
 
         private EditText salaryEditText;
         private Spinner salarySpinner;
@@ -75,6 +76,7 @@ import java.util.ArrayList;
         private SeekBar otherSeekBar;
         private EditText otherTotal;
 
+        private TextView savingsPerSalaryLabel;
         private EditText savingsPerSalary;
         private EditText payoffTime;
         private EditText finalSavings;
@@ -114,6 +116,8 @@ import java.util.ArrayList;
             salaryEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    for(ExpenseIO eio : expenseIOs)
+                        eio.setMax((int)Math.round(extractDouble(salaryEditText.getText())));
                     updateResults();
                     return false; // false means I don't want to take control from the OS
                 }
@@ -213,6 +217,7 @@ import java.util.ArrayList;
             }
 
         private void initResults(View rootView) {
+            savingsPerSalaryLabel = (TextView) rootView.findViewById(R.id.savingsPerCycleLabel);
             savingsPerSalary = (EditText) rootView.findViewById(R.id.savingsPerCycle);
             payoffTime = (EditText) rootView.findViewById(R.id.timeToPayExpenses);
             finalSavings = (EditText) rootView.findViewById(R.id.savingsOverall);
@@ -222,28 +227,31 @@ import java.util.ArrayList;
 
         public void updateResults()
         {
-            debtCalculator.monthly_salary = Convenience.extractDouble(salaryEditText.getText());
-            debtCalculator.total_debt = Convenience.extractDouble(debtEditText.getText());
-//            for(ExpenseIO eio : expenseIOs)
-//                debtCalculator.total_debt += eio.getExpenseAmount();
-            debtCalculator.monthly_percent_debt_payoff  = debtPayoffSeekBar.getProgress() * .01;
-            debtCalculator.monthly_expenditures = 0;
+            double expense = 0;
             for(ExpenseIO eio : expenseIOs)
-                debtCalculator.monthly_expenditures += eio.getExpenseAmount();
-            debtCalculator.budgetCalculation();
+                expense += eio.getExpenseAmount();
 
+            DebtCalculator debtCalculator = new DebtCalculator(
+                    currentSalary,
+                    extractDouble(debtEditText.getText()),
+                    extractDouble(salaryEditText.getText()),
+                    expense
+            );
+
+            debtCalculator.budgetCalculation(1);
+            String salaryNoun = currentSalary.toNoun();
+            savingsPerSalaryLabel.setText("Savings per " + salaryNoun);
             savingsPerSalary.setText(MONEY_FORMAT.format(debtCalculator.money_saved));
             payoffTime.setText(
-                    Double.isInfinite(debtCalculator.number_of_months_to_pay_off_debt)
-                    || Double.isNaN(debtCalculator.number_of_months_to_pay_off_debt)
-                        ? "Never"
-                        :
-                            new DecimalFormat("##.##")
-                                .format(debtCalculator.number_of_months_to_pay_off_debt) + " " +
-                            currentSalary.toString().substring(0,
-                                    currentSalary.toString().length() - 2) + "s"
+                Double.isInfinite(debtCalculator.time_to_pay_off_debt)
+                || Double.isNaN(debtCalculator.time_to_pay_off_debt)
+                    ? "Never"
+                    :
+                        new DecimalFormat("##.##")
+                            .format(debtCalculator.time_to_pay_off_debt) + " " + salaryNoun + "s"
             );
-            finalSavings.setText(MONEY_FORMAT.format(debtCalculator.monthly_amount_towards_debt_payoff));
+            finalSavings.setText(MONEY_FORMAT.format(
+                    debtCalculator.money_saved * debtCalculator.time_to_pay_off_debt));
         }
 
         @Override
@@ -258,12 +266,17 @@ import java.util.ArrayList;
         private class ExpenseIO
         {
             private Expense representative;
-            public ExpenseIO(SeekBar in, EditText out, final Expense initRepresentative)
+            private SeekBar in;
+            private EditText out;
+
+            public ExpenseIO(SeekBar initIn, EditText initOut, final Expense initRepresentative)
             {
+                in = initIn;
+                out = initOut;
                 representative = initRepresentative;
                 Convenience.bindSeekBarInOut(
-                        in,
-                        out,
+                        initIn,
+                        initOut,
                         MONEY_FORMAT,
                         new SeekBar.OnSeekBarChangeListener() {
                             @Override
@@ -290,6 +303,10 @@ import java.util.ArrayList;
 
             public void setExpenseAmount(double newExpenseAmount) {
                 representative.setExpenseAmount(newExpenseAmount);
+            }
+
+            public void setMax(int newMax) {
+                in.setMax(newMax);
             }
         }
     }
