@@ -55,10 +55,11 @@ import java.util.regex.Pattern;
         ;
         if (output instanceof EditText)
         {
-            ((EditText) output).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            ((EditText) output).setOnEditorActionListener(
+                    new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    input.setProgress((int)Math.round(extractDouble(v.getText()) * input.getMax()));
+                    input.setProgress((int)Math.round(extractDouble(v.getText())));
                     return false;
                 }
             });
