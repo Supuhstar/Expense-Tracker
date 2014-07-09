@@ -235,7 +235,8 @@ import static org.bh.expensetracker.Convenience.extractDouble;
                     currentSalary,
                     extractDouble(debtEditText.getText()),
                     extractDouble(salaryEditText.getText()),
-                    expense
+                    expense,
+                    debtPayoffSeekBar.getProgress() * .01
             );
 
             debtCalculator.budgetCalculation(1);
@@ -250,8 +251,7 @@ import static org.bh.expensetracker.Convenience.extractDouble;
                         new DecimalFormat("##.##")
                             .format(debtCalculator.time_to_pay_off_debt) + " " + salaryNoun + "s"
             );
-            finalSavings.setText(MONEY_FORMAT.format(
-                    debtCalculator.money_saved * debtCalculator.time_to_pay_off_debt));
+            finalSavings.setText(MONEY_FORMAT.format(debtCalculator.amount_saved_once_debt_payoff));
         }
 
         @Override
@@ -281,7 +281,7 @@ import static org.bh.expensetracker.Convenience.extractDouble;
                         new SeekBar.OnSeekBarChangeListener() {
                             @Override
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                representative.setExpenseAmount((progress * .01) * currentSalary.IN_MONTHS);
+                                setExpenseAmount(progress);
                                 updateResults();
                             }
 
