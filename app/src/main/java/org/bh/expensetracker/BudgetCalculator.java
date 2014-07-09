@@ -3,6 +3,7 @@ package org.bh.expensetracker;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.bh.expensetracker.util.DebtCalculator;
 import org.bh.expensetracker.util.Expense;
 import org.bh.expensetracker.util.SalaryType;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Made for ExpenseTracker by and copyrighted to Blue Husky Programming, ©2014 GPLv3.<hr/>
@@ -47,15 +49,35 @@ import java.text.DecimalFormat;
         private static final String SALARY            = "SAL";
         private static final String SALARY_TYPE_INDEX = "SAL_TYPE_IDX";
 
-        private double salary;       // Bill as entered by the user
-        private int salaryTypeIndex; // Custom tip % as set by user
+        protected double salary;       // Bill as entered by the user
+        protected int salaryTypeIndex; // Custom tip % as set by user
+
+        private static final DecimalFormat MONEY_FORMAT = new DecimalFormat("\u00A4#,###,###,##0.00");
+
+        protected SalaryType currentSalary;
+        protected ArrayList<ExpenseIO> expenseIOs = new ArrayList<ExpenseIO>();
+        protected DebtCalculator debtCalculator = new DebtCalculator();
 
         private EditText salaryEditText;
         private Spinner salarySpinner;
+        private EditText debtEditText;
         private SeekBar debtPayoffSeekBar;
         private TextView debtPayoffPercentTextView;
 
-        private SalaryType currentSalary;
+        private SeekBar billsSeekBar;
+        private EditText billsTotal;
+        private SeekBar foodSeekBar;
+        private EditText foodTotal;
+        private SeekBar housingSeekBar;
+        private EditText housingTotal;
+        private SeekBar transitSeekBar;
+        private EditText transitTotal;
+        private SeekBar otherSeekBar;
+        private EditText otherTotal;
+
+        private EditText savingsPerSalary;
+        private EditText payoffTime;
+        private EditText finalSavings;
 
         public PlaceholderFragment() { }
 
@@ -74,65 +96,154 @@ import java.text.DecimalFormat;
             }
             View rootView = inflater.inflate(R.layout.fragment_budget, container, false);
 
-            {
-                salarySpinner = (Spinner)rootView.findViewById(R.id.salarySpinner);
-                salarySpinner.setSelection(salaryTypeIndex);
-            }
-            salaryEditText = (EditText) rootView.findViewById(R.id.salaryEditText);
-            {
-                salarySpinner = (Spinner) rootView.findViewById(R.id.salarySpinner);
+            initSalary(rootView);
+            initDebt(rootView);
+            initDebtPayoff(rootView);
+            initExpenses(rootView);
+            initResults(rootView);
 
-                ArrayAdapter<SalaryType> salarySpinnerArrayAdapter =
-                    new ArrayAdapter<SalaryType>(
-                        getActivity(),
-                        android.R.layout.simple_spinner_item,
-                        SalaryType.values()
-                    ); //selected item will look like a spinner set from XML
-                salarySpinnerArrayAdapter.setDropDownViewResource(
-                        android.R.layout.simple_spinner_dropdown_item);
-                salarySpinner.setAdapter(salarySpinnerArrayAdapter);
-
-                salarySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentSalary = SalaryType.values()[position];
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        currentSalary = SalaryType.MONTHLY;
-                    }
-                });
-                salarySpinner.setSelection(salaryTypeIndex);
-            }
-            debtPayoffPercentTextView = (TextView) rootView.findViewById(
-                    R.id.salaryDebtPayoffPercentTextView);
-            {
-                debtPayoffSeekBar = (SeekBar) rootView.findViewById(R.id.salaryDebtPayoffSeekBar);
-                Convenience.bindSeekBarInOut(
-                        debtPayoffSeekBar,
-                        debtPayoffPercentTextView,
-                        new DecimalFormat("##@'%'"),
-                        new SeekBar.OnSeekBarChangeListener() {
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                            }
-
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
-
-                            }
-
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                            }
-                        }
-                );
-            }
 
             return rootView;
+        }
+
+        private void initSalary(View rootView) {
+            salarySpinner = (Spinner)rootView.findViewById(R.id.salarySpinner);
+            salarySpinner.setSelection(salaryTypeIndex);
+
+            salaryEditText = (EditText) rootView.findViewById(R.id.salaryEditText);
+            salaryEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    updateResults();
+                    return false; // false means I don't want to take control from the OS
+                }
+            });
+
+            salarySpinner = (Spinner) rootView.findViewById(R.id.salarySpinner);
+
+            ArrayAdapter<SalaryType> salarySpinnerArrayAdapter =
+                    new ArrayAdapter<SalaryType>(
+                            getActivity(),
+                            android.R.layout.simple_spinner_item,
+                            SalaryType.values()
+                    ); //selected item will look like a spinner set from XML
+            salarySpinnerArrayAdapter.setDropDownViewResource(
+                    android.R.layout.simple_spinner_dropdown_item);
+            salarySpinner.setAdapter(salarySpinnerArrayAdapter);
+
+            salarySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    currentSalary = SalaryType.values()[position];
+                    updateResults();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    currentSalary = SalaryType.MONTHLY;
+                }
+            });
+            salarySpinner.setSelection(salaryTypeIndex);
+        }
+
+        private void initDebt(View rootView) {
+            debtEditText = (EditText) rootView.findViewById(R.id.debtEditText);
+            debtEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    updateResults();
+                    return false; // false means I don't want to take control from the OS
+                }
+            });
+        }
+
+        private void initDebtPayoff(View rootView) {
+            debtPayoffPercentTextView = (TextView) rootView.findViewById(
+                    R.id.salaryDebtPayoffPercentTextView);
+
+            debtPayoffSeekBar = (SeekBar) rootView.findViewById(R.id.salaryDebtPayoffSeekBar);
+            Convenience.bindSeekBarInOut(
+                    debtPayoffSeekBar,
+                    debtPayoffPercentTextView,
+                    new DecimalFormat("##@'%'"),
+                    new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            updateResults();
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            updateResults();
+                        }
+                    }
+            );
+
+        }
+
+        private void initExpenses(View rootView) {
+            initExpenseIO(
+                billsSeekBar = (SeekBar) rootView.findViewById(R.id.billsExpensesSeekBar),
+                billsTotal  = (EditText) rootView.findViewById(R.id.billsExpensesTotal),
+                Expense.BILLS);
+            initExpenseIO(
+                foodSeekBar = (SeekBar) rootView.findViewById(R.id.foodExpensesSeekBar),
+                foodTotal  = (EditText) rootView.findViewById(R.id.foodExpensesTotal),
+                Expense.FOOD);
+            initExpenseIO(
+                housingSeekBar = (SeekBar) rootView.findViewById(R.id.housingExpensesSeekBar),
+                housingTotal  = (EditText) rootView.findViewById(R.id.housingExpensesTotal),
+                Expense.HOUSING);
+            initExpenseIO(
+                transitSeekBar = (SeekBar) rootView.findViewById(R.id.transitExpensesSeekBar),
+                transitTotal  = (EditText) rootView.findViewById(R.id.transitExpensesTotal),
+                Expense.TRANSIT);
+            initExpenseIO(
+                otherSeekBar = (SeekBar) rootView.findViewById(R.id.otherExpensesSeekBar),
+                otherTotal  = (EditText) rootView.findViewById(R.id.otherExpensesTotal),
+                Expense.OTHER);
+        }
+            private void initExpenseIO(SeekBar in, EditText out, Expense type) {
+                expenseIOs.add(new ExpenseIO(in, out, type));
+            }
+
+        private void initResults(View rootView) {
+            savingsPerSalary = (EditText) rootView.findViewById(R.id.savingsPerCycle);
+            payoffTime = (EditText) rootView.findViewById(R.id.timeToPayExpenses);
+            finalSavings = (EditText) rootView.findViewById(R.id.savingsOverall);
+        }
+
+
+
+        public void updateResults()
+        {
+            debtCalculator.monthly_salary = Convenience.extractDouble(salaryEditText.getText());
+            debtCalculator.total_debt = Convenience.extractDouble(debtEditText.getText());
+//            for(ExpenseIO eio : expenseIOs)
+//                debtCalculator.total_debt += eio.getExpenseAmount();
+            debtCalculator.monthly_percent_debt_payoff  = debtPayoffSeekBar.getProgress() * .01;
+            debtCalculator.monthly_expenditures = 0;
+            for(ExpenseIO eio : expenseIOs)
+                debtCalculator.monthly_expenditures += eio.getExpenseAmount();
+            debtCalculator.budgetCalculation();
+
+            savingsPerSalary.setText(MONEY_FORMAT.format(debtCalculator.money_saved));
+            payoffTime.setText(
+                    Double.isInfinite(debtCalculator.number_of_months_to_pay_off_debt)
+                    || Double.isNaN(debtCalculator.number_of_months_to_pay_off_debt)
+                        ? "Never"
+                        :
+                            new DecimalFormat("##.##")
+                                .format(debtCalculator.number_of_months_to_pay_off_debt) + " " +
+                            currentSalary.toString().substring(0,
+                                    currentSalary.toString().length() - 2) + "s"
+            );
+            finalSavings.setText(MONEY_FORMAT.format(debtCalculator.monthly_amount_towards_debt_payoff));
         }
 
         @Override
@@ -142,6 +253,44 @@ import java.text.DecimalFormat;
 
             outState.putDouble(SALARY, salary);
             outState.putInt(SALARY_TYPE_INDEX, salaryTypeIndex);
+        }
+
+        private class ExpenseIO
+        {
+            private Expense representative;
+            public ExpenseIO(SeekBar in, EditText out, final Expense initRepresentative)
+            {
+                representative = initRepresentative;
+                Convenience.bindSeekBarInOut(
+                        in,
+                        out,
+                        MONEY_FORMAT,
+                        new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                representative.setExpenseAmount((progress * .01) * currentSalary.IN_MONTHS);
+                                updateResults();
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                updateResults();
+                            }
+                        });
+            }
+
+            public double getExpenseAmount() {
+                return representative.getExpenseAmount();
+            }
+
+            public void setExpenseAmount(double newExpenseAmount) {
+                representative.setExpenseAmount(newExpenseAmount);
+            }
         }
     }
 }

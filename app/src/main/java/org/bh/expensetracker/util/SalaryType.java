@@ -1,7 +1,7 @@
 package org.bh.expensetracker.util;
 
 /**
- * Represents the 4 types of salaries
+ * Represents the 4 types of salaries.
  *
  * @author Kyli Rouge of Blue Husky Programming
  * @version 1.0.0
@@ -69,7 +69,7 @@ public enum SalaryType
      */
     @Override
     public String toString() {
-        String name = name().toUpperCase();
-        return name.charAt(0) + name.substring(1).toLowerCase();
+        String name = name().replace("_", " ");
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
     }
 }

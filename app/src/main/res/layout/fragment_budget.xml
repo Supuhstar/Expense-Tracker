@@ -69,6 +69,34 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/debtLabel"
+                            android:id="@+id/debtLabelTextView"
+                            android:layout_column="0"
+                            android:gravity="center|center_vertical|right"
+                            android:layout_gravity="center_vertical|right"
+                            android:layout_span="1"
+                            android:layout_weight="0" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:ems="0"
+                            android:id="@+id/debtEditText"
+                            android:layout_column="1"
+                            android:gravity="center|left"
+                            android:layout_gravity="center_vertical|fill_horizontal"
+                            android:hint="@string/zeroCurrency"
+                            android:layout_weight="1"
+                            android:layout_span="1" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@string/salaryDebtPayoffLabel"
                             android:id="@+id/salaryDebtPayoffLabelTextView"
                             android:layout_column="0"
@@ -146,7 +174,8 @@
                             android:layout_column="2"
                             android:layout_gravity="center_vertical|left"
                             android:gravity="center_vertical|left"
-                            android:text="@string/zeroCurrency" />
+                            android:text="@string/zeroCurrency"
+                            android:inputType="numberDecimal" />
                     </TableRow>
 
                     <TableRow
@@ -177,7 +206,8 @@
                             android:layout_column="2"
                             android:layout_gravity="center_vertical|left"
                             android:gravity="center_vertical|left"
-                            android:text="@string/zeroCurrency" />
+                            android:text="@string/zeroCurrency"
+                            android:inputType="numberDecimal" />
                     </TableRow>
 
                     <TableRow
@@ -208,7 +238,8 @@
                             android:layout_column="2"
                             android:layout_gravity="center_vertical|left"
                             android:gravity="center_vertical|left"
-                            android:text="@string/zeroCurrency" />
+                            android:text="@string/zeroCurrency"
+                            android:inputType="numberDecimal" />
                     </TableRow>
 
                     <TableRow
@@ -239,7 +270,8 @@
                             android:layout_column="2"
                             android:layout_gravity="center_vertical|left"
                             android:gravity="center_vertical|left"
-                            android:text="@string/zeroCurrency" />
+                            android:text="@string/zeroCurrency"
+                            android:inputType="numberDecimal" />
                     </TableRow>
 
                     <TableRow
@@ -270,7 +302,8 @@
                             android:layout_column="2"
                             android:layout_gravity="center_vertical|left"
                             android:gravity="center_vertical|left"
-                            android:text="@string/zeroCurrency" />
+                            android:text="@string/zeroCurrency"
+                            android:inputType="numberDecimal" />
                     </TableRow>
                 </TableLayout>
             </TableRow>

@@ -1,5 +1,7 @@
 package org.bh.expensetracker;
 
+import android.view.KeyEvent;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,7 +27,7 @@ import java.util.regex.Pattern;
      * @param nestedListener a nested listener, in case you want more functionality
      */
     public static void bindSeekBarInOut(
-            SeekBar input,
+            final SeekBar input,
             final TextView output,
             final DecimalFormat outputFormat,
             final SeekBar.OnSeekBarChangeListener nestedListener)
@@ -51,6 +53,16 @@ import java.util.regex.Pattern;
                 }
             )
         ;
+        if (output instanceof EditText)
+        {
+            ((EditText) output).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    input.setProgress((int)Math.round(extractDouble(v.getText()) * input.getMax()));
+                    return false;
+                }
+            });
+        }
     }
 
     /**
@@ -71,7 +83,8 @@ import java.util.regex.Pattern;
      *
      * @return the extracted double
      *
-     * @throws java.lang.NumberFormatException if a double could not be found
+     * @version 1.1.0
+     *      - 1.1.0 (2014-07-08) - Ben Leggiero replaced throwing an exception with returning 0
      */
     public static double extractDouble(CharSequence possibleDouble)
     {
@@ -83,7 +96,6 @@ import java.util.regex.Pattern;
         if (matcher.find())
             return Double.parseDouble(matcher.group());
         else
-            throw new NumberFormatException(
-                    "Double could not be extracted from \"" + possibleDouble + "\"");
+            return 0;
     }
 }

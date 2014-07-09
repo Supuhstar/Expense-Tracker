@@ -10,25 +10,25 @@ package org.bh.expensetracker.util;
 public enum Expense {
     BILLS(),
     FOOD(),
-    RENT(),
-    TRANSPORTATION(),
+    HOUSING(),
+    TRANSIT(),
     OTHER();
 
-    private float expenseAmount;
+    private double expenseAmount;
 
     private Expense() {
         expenseAmount = 0;
     }
 
-    public float getExpenseAmount() {
+    public double getExpenseAmount() {
         return expenseAmount;
     }
 
-    public void setExpenseAmount(float newExpenseAmount) {
+    public void setExpenseAmount(double newExpenseAmount) {
         expenseAmount = newExpenseAmount;
     }
 
-    public static float calculateTotal() {
+    public static double calculateTotal() {
         float total = 0;
         for (Expense expense : values())
             total += expense.getExpenseAmount();

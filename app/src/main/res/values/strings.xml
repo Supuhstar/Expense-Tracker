@@ -30,6 +30,7 @@
     <string name="savingsPerCycleExpensesLabel">Savings per Salary:\ </string>
     <string name="timeToPayExpensesLabel">Payoff time:\ </string>
     <string name="savingsOverallExpensesLabel">Final Savings:\ </string>
+    <string name="debtLabel">Debt:</string>
     <string-array name="salary_array">
         <item>Hourly</item>
         <item default="default">Monthly</item>
